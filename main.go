@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/joho/godotenv"
+	no_persistent "github.com/omjogani/realtime-communication/no-persistent"
 	"golang.org/x/net/websocket"
 )
 
@@ -18,11 +20,15 @@ func main() {
 		log.Fatal("Could not load Environment Variables...")
 	}
 	PORT := os.Getenv("PORT_NO")
+	if PORT == "" {
+		PORT = "3550"
+	}
 
 	// Redirection Paths
-	http.Handle("/no-persistent", websocket.Handler())
-	http.Handle("/persistent-first", websocket.Handler())
-	http.Handle("/persistent-later", websocket.Handler())
+	http.Handle("/no-persistent", websocket.Handler(no_persistent.NewServer().RequestHandler))
+	// http.Handle("/persistent-first", websocket.Handler())
+	// http.Handle("/persistent-later", websocket.Handler())
 
-	http.ListenAndServe(PORT, nil)
+	color.Green("Server is listening at: ", PORT)
+	http.ListenAndServe(fmt.Sprintf(":%v", PORT), nil)
 }
