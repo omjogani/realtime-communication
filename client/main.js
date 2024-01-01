@@ -8,6 +8,7 @@ const CommunicationType = {
     PersistentLater: "persistent-letter"
 };
 
+let webSocket;
 
 function handleCommunicationType(communicationType) {
     // make dropdown hidden
@@ -17,12 +18,11 @@ function handleCommunicationType(communicationType) {
     // make chat visible
     const chat = document.getElementById("chat");
     chat.classList.remove("hidden");
-
-    console.log( `${__dirname}/dev.env`);
     
     // grab persistent value
     if (communicationType === CommunicationType.NoPersistent){
-        const webSocket = new WebSocket(URL + communicationType);
+        console.log(URL+communicationType);
+        webSocket = new WebSocket(URL + communicationType);
         webSocket.onerror = function () {
             alert("Error While Connecting Socket");
         }
@@ -36,6 +36,12 @@ function handleCommunicationType(communicationType) {
 
 function handleNoPersistent(webSocket) {
     webSocket.onmessage = function(event) {
-
+        console.log(`Event Data: ${event.data}`);
     }
 }
+
+function handleSendMessage() {
+    const textField = document.getElementById("message");
+    webSocket.send(textField.value);
+    // handleNoPersistent();
+}   

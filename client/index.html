@@ -34,7 +34,7 @@
         </div>
     </div>
     <!-- Chat -->
-    <section id="chat" class="hidden flex flex-col justify-start antialiased bg-gray-50 text-gray-600 min-h-screen p-4">
+    <section id="chat" class="hidden flex flex-col justify-start antialiased bg-gray-50 text-gray-600 min-h-screen ">
         <div class="h-full">
             <!-- Card -->
             <div class="relative max-w-[340px] mx-auto bg-white shadow-lg rounded-lg">
@@ -92,6 +92,15 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <!-- Send TextBox -->
+        <div class="fixed bottom-0 w-full flex justify-center m-4">            
+            <form class="w-1/2">   
+                <div class="relative">
+                    <input type="search" id="message" class="block w-full p-4 ps-10 text-sm text-black border border-gray-300 rounded-lg bg-white-50 focus:ring-black-500 focus:border-black-500 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Type message..." required>
+                    <button onclick="handleSendMessage()" type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Send</button>
+                </div>
+            </form>
         </div>
     </section>
 

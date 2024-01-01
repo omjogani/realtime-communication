@@ -34,7 +34,7 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 	for {
 		value, err := ws.Read(buffer)
 		if err != nil {
-			if err != io.EOF {
+			if err == io.EOF {
 				color.Red("Connection got disturbed from other end: ", err)
 				break
 			}
