@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realtime Communication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+
+</head>
+<body class="bg-gray-50">
+    <div id="cTypeDropdown" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <!-- Dropdown Button -->
+        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-white w-auto min-w-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Select Communication Type
+            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+        </button>
+        
+        <!-- Dropdown menu -->
+        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                <li>
+                    <button onclick="handleCommunicationType('persistent-first')" type="button" class="m-4">Persistent First (Slack)</button>
+                </li>
+                <li>
+                    <button onclick="handleCommunicationType('persistent-later')" type="button" class="m-4">Persistent Later (WhatsApp)</button>
+                </li>
+                <li>
+                    <button onclick="handleCommunicationType('no-persistent')" type="button" class="m-4">No Persistent (Zoom/GMeet Chat)</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- Chat -->
+    <section id="chat" class="hidden flex flex-col justify-start antialiased bg-gray-50 text-gray-600 min-h-screen p-4">
+        <div class="h-full">
+            <!-- Card -->
+            <div class="relative max-w-[340px] mx-auto bg-white shadow-lg rounded-lg">
+                <!-- Card header -->
+                <header class="pt-6 pb-4 px-5 border-b border-gray-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <!-- Image + name -->
+                        <div class="flex items-center">
+                            <a class="inline-flex items-start mr-3" href="#0">
+                                <img class="rounded-full" src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg" width="48" height="48" alt="Lauren Marsano" />
+                            </a>
+                            <div class="pr-1">
+                                <a class="inline-flex text-gray-800 hover:text-gray-900" href="#0">
+                                    <h2 class="text-xl leading-snug font-bold">Lauren Marsano</h2>
+                                </a>
+                                <a class="block text-sm font-medium hover:text-indigo-500" href="#0">@lauren.mars</a>
+                            </div>
+                        </div>
+                        <!-- Settings button -->
+                        <div class="relative inline-flex flex-shrink-0">
+                            <button class="text-gray-400 hover:text-gray-500 rounded-full focus:ring-0 outline-none focus:outline-none">
+                                <span class="sr-only">Settings</span>
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 16 16">
+                                    <path d="m15.621 7.015-1.8-.451A5.992 5.992 0 0 0 13.13 4.9l.956-1.593a.5.5 0 0 0-.075-.611l-.711-.707a.5.5 0 0 0-.611-.075L11.1 2.87a5.99 5.99 0 0 0-1.664-.69L8.985.379A.5.5 0 0 0 8.5 0h-1a.5.5 0 0 0-.485.379l-.451 1.8A5.992 5.992 0 0 0 4.9 2.87l-1.593-.956a.5.5 0 0 0-.611.075l-.707.711a.5.5 0 0 0-.075.611L2.87 4.9a5.99 5.99 0 0 0-.69 1.664l-1.8.451A.5.5 0 0 0 0 7.5v1a.5.5 0 0 0 .379.485l1.8.451c.145.586.378 1.147.691 1.664l-.956 1.593a.5.5 0 0 0 .075.611l.707.707a.5.5 0 0 0 .611.075L4.9 13.13a5.99 5.99 0 0 0 1.664.69l.451 1.8A.5.5 0 0 0 7.5 16h1a.5.5 0 0 0 .485-.379l.451-1.8a5.99 5.99 0 0 0 1.664-.69l1.593.956a.5.5 0 0 0 .611-.075l.707-.707a.5.5 0 0 0 .075-.611L13.13 11.1a5.99 5.99 0 0 0 .69-1.664l1.8-.451A.5.5 0 0 0 16 8.5v-1a.5.5 0 0 0-.379-.485ZM8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+                <!-- Card body -->
+                <div class="py-3 px-5">
+                    <h3 class="text-xs font-semibold uppercase text-gray-400 mb-1">Chats</h3>
+                    <!-- Chat list -->
+                    <div class="divide-y divide-gray-200">
+                        <!-- User -->
+                        <button class="w-full text-left py-2 focus:outline-none focus-visible:bg-indigo-50">
+                            <div class="flex items-center">
+                                <img class="rounded-full items-start flex-shrink-0 mr-3" src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-01_pfck4u.jpg" width="32" height="32" alt="Marie Zulfikar" />
+                                <div>
+                                    <h4 class="text-sm font-semibold text-gray-900">Marie Zulfikar</h4>
+                                    <div class="text-[13px]">The video chat ended · 2hrs</div>
+                                </div>
+                            </div>
+                        </button>
+                        <!-- User -->
+                        <button class="w-full text-left py-2 focus:outline-none focus-visible:bg-indigo-50">
+                            <div class="flex items-center">
+                                <img class="rounded-full items-start flex-shrink-0 mr-3" src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-02_vll8uv.jpg" width="32" height="32" alt="Nhu Cassel" />
+                                <div>
+                                    <h4 class="text-sm font-semibold text-gray-900">Nhu Cassel</h4>
+                                    <div class="text-[13px]">Hello Lauren 👋, · 24 Mar</div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+<script src="./main.js"></script>
+</body>
+</html>
