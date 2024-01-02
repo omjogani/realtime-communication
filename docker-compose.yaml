@@ -1,0 +1,88 @@
+version: '3.1'
+
+services:
+  app:  
+    build: .
+    ports:
+      - "3550:3550" 
+    environment:  
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+      - KAFKA_BROKERS=kafka:9092
+    depends_on:  
+      - redis
+      - db
+      - kafka
+
+  zookeeper:
+    image: bitnami/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  
+  kafka:
+    image: bitnami/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    volumes:
+      - "kafka_data:/bitnami"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      - zookeeper
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-volume-data:/data
+  
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "8001:8001"
+    volumes:
+      - redisinsight-data:/db
+  
+
+  db:
+    image: postgres
+    container_name: postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=MSGDB
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+  
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+  postgres_data:
+  redis-volume-data:
+  redisinsight-data:
