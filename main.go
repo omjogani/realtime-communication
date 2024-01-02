@@ -29,6 +29,7 @@ func main() {
 	// http.Handle("/persistent-first", websocket.Handler())
 	// http.Handle("/persistent-later", websocket.Handler())
 
-	color.Green("Server is listening at: ", PORT)
+	color.Green("Server is listening at: %v", PORT)
+	color.Blue("------------------------------")
 	http.ListenAndServe(fmt.Sprintf(":%v", PORT), nil)
 }

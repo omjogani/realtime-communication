@@ -1,6 +1,8 @@
 package no_persistent
 
 import (
+	"encoding/json"
+	"fmt"
 	"io"
 
 	"github.com/fatih/color"
@@ -23,10 +25,15 @@ func (s *Server) broadCastRequest(payload []byte) {
 		go func(ws *websocket.Conn) {
 			_, err := ws.Write(payload)
 			if err != nil {
-				color.Red("Error while Broadcasting Message: ", err)
+				color.Red("Error while Broadcasting Message: %v", err)
 			}
 		}(ws)
 	}
+}
+
+type Message struct {
+	Username string
+	Message  string
 }
 
 func (s *Server) readLoop(ws *websocket.Conn) {
@@ -38,16 +45,25 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 				// Connection got disturbed from other end
 				break
 			}
-			color.Red("Error while Reading Buffer: ", err)
+			color.Red("Error while Reading Buffer: %v", err)
 			continue
 		}
 		message := buffer[:value]
+		messageStr := string(message)
+		var data Message
+
+		err = json.Unmarshal([]byte(messageStr), &data)
+		if err != nil {
+			color.Red("Error while Marshaling: ", err)
+		}
+		fmt.Print(data.Username, ": ")
+		fmt.Println(data.Message)
 		s.broadCastRequest(message)
 	}
 }
 
 func (s *Server) RequestHandler(ws *websocket.Conn) {
-	color.BlueString("New Connection From Client", ws.RemoteAddr())
+	color.Blue("New Connection From Client: %v", ws.RemoteAddr())
 	s.conns[ws] = true
 	s.readLoop(ws)
 }

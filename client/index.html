@@ -11,14 +11,17 @@
 </head>
 <body class="bg-gray-50">
     <div id="cTypeDropdown" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <!-- Dropdown Button -->
+        <!-- Name TextBox -->
+        <input type="text" id="name" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600  dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your name..." required autocomplete="off">
+        <br>
+        <!-- Communication Type Dropdown Button -->
         <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-white w-auto min-w-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Select Communication Type
             <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
             </svg>
         </button>
         
-        <!-- Dropdown menu -->
+        <!-- Communication Type Dropdown menu -->
         <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                 <li>
@@ -44,23 +47,13 @@
                         <!-- Image + name -->
                         <div class="flex items-center">
                             <a class="inline-flex items-start mr-3" href="#0">
-                                <img class="rounded-full" src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg" width="48" height="48" alt="Lauren Marsano" />
+                                <img id="myProfilePicture" class="rounded-full" src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg" width="48" height="48" alt="Lauren Marsano" />
                             </a>
                             <div class="pr-1">
                                 <a class="inline-flex text-gray-800 hover:text-gray-900" href="#0">
-                                    <h2 class="text-xl leading-snug font-bold">Lauren Marsano</h2>
+                                    <h2 id="myName" class="text-xl leading-snug font-bold">Name</h2>
                                 </a>
-                                <a class="block text-sm font-medium hover:text-indigo-500" href="#0">@lauren.mars</a>
                             </div>
-                        </div>
-                        <!-- Settings button -->
-                        <div class="relative inline-flex flex-shrink-0">
-                            <button class="text-gray-400 hover:text-gray-500 rounded-full focus:ring-0 outline-none focus:outline-none">
-                                <span class="sr-only">Settings</span>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 16 16">
-                                    <path d="m15.621 7.015-1.8-.451A5.992 5.992 0 0 0 13.13 4.9l.956-1.593a.5.5 0 0 0-.075-.611l-.711-.707a.5.5 0 0 0-.611-.075L11.1 2.87a5.99 5.99 0 0 0-1.664-.69L8.985.379A.5.5 0 0 0 8.5 0h-1a.5.5 0 0 0-.485.379l-.451 1.8A5.992 5.992 0 0 0 4.9 2.87l-1.593-.956a.5.5 0 0 0-.611.075l-.707.711a.5.5 0 0 0-.075.611L2.87 4.9a5.99 5.99 0 0 0-.69 1.664l-1.8.451A.5.5 0 0 0 0 7.5v1a.5.5 0 0 0 .379.485l1.8.451c.145.586.378 1.147.691 1.664l-.956 1.593a.5.5 0 0 0 .075.611l.707.707a.5.5 0 0 0 .611.075L4.9 13.13a5.99 5.99 0 0 0 1.664.69l.451 1.8A.5.5 0 0 0 7.5 16h1a.5.5 0 0 0 .485-.379l.451-1.8a5.99 5.99 0 0 0 1.664-.69l1.593.956a.5.5 0 0 0 .611-.075l.707-.707a.5.5 0 0 0 .075-.611L13.13 11.1a5.99 5.99 0 0 0 .69-1.664l1.8-.451A.5.5 0 0 0 16 8.5v-1a.5.5 0 0 0-.379-.485ZM8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
-                                </svg>
-                            </button>
                         </div>
                     </div>
                 </header>
@@ -69,38 +62,19 @@
                     <h3 class="text-xs font-semibold uppercase text-gray-400 mb-1">Chats</h3>
                     <!-- Chat list -->
                     <div id="chatList" class="divide-y divide-gray-200">
-                        <!-- User -->
-                        <button class="w-full text-left py-2 focus:outline-none focus-visible:bg-indigo-50">
-                            <div class="flex items-center">
-                                <img class="rounded-full items-start flex-shrink-0 mr-3" src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-01_pfck4u.jpg" width="32" height="32" alt="Marie Zulfikar" />
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900">Marie Zulfikar</h4>
-                                    <div class="text-[13px]">The video chat ended · 2hrs</div>
-                                </div>
-                            </div>
-                        </button>
-                        <!-- User -->
-                        <button class="w-full text-left py-2 focus:outline-none focus-visible:bg-indigo-50">
-                            <div class="flex items-center">
-                                <img class="rounded-full items-start flex-shrink-0 mr-3" src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-02_vll8uv.jpg" width="32" height="32" alt="Nhu Cassel" />
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900">Nhu Cassel</h4>
-                                    <div class="text-[13px]">Hello Lauren 👋, · 24 Mar</div>
-                                </div>
-                            </div>
-                        </button>
+                        <!-- Chat Messages will be added here -->
                     </div>
                 </div>
             </div>
         </div>
         <!-- Send TextBox -->
         <div class="fixed bottom-0 w-full flex justify-center m-4">            
-            <form class="w-1/2">   
+            <div class="w-1/2">   
                 <div class="relative">
-                    <input type="text" id="message" class="block w-full p-4 ps-10 text-sm text-black border border-gray-300 rounded-lg bg-white-50 focus:ring-black-500 focus:border-black-500 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Type message..." required>
+                    <input type="text" id="message" class="block w-full p-4 ps-10 text-sm text-black border border-gray-300 rounded-lg bg-white-50 focus:ring-black-500 focus:border-black-500 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Type message..." required autocomplete="off">
                     <button onclick="handleSendMessage()" type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Send</button>
                 </div>
-            </form>
+            </div>
         </div>
     </section>
 
