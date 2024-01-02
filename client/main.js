@@ -43,5 +43,4 @@ function handleNoPersistent(webSocket) {
 function handleSendMessage() {
     const textField = document.getElementById("message");
     webSocket.send(textField.value);
-    // handleNoPersistent();
-}   
+}
