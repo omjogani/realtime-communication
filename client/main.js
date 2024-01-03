@@ -1,5 +1,5 @@
 // Go Server URL
-const URL = "ws://localhost:3550/";
+const URL = "ws://localhost:3551/";
 
 // enum for communication types
 const CommunicationType = {
@@ -44,6 +44,12 @@ function handleCommunicationType(communicationType) {
         handleNoPersistent(webSocket);
     } else if (communicationType === CommunicationType.PersistentFirst) {
         persistentType = CommunicationType.PersistentFirst;
+        console.log(URL+communicationType);
+        webSocket = new WebSocket(URL + communicationType);
+        webSocket.onerror = function () {
+            alert("Error While Connecting Socket");
+        }
+        handleNoPersistent(webSocket);
     } else {
         persistentType = CommunicationType.PersistentLater
     }
