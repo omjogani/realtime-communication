@@ -63,13 +63,13 @@ services:
     container_name: postgres
     restart: always
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./data/db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=MSGDB
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=msgDB
+      - POSTGRES_USER=omjogani
+      - POSTGRES_PASSWORD=OmJogani
   
   adminer:
     image: adminer
@@ -83,6 +83,5 @@ volumes:
     driver: local
   kafka_data:
     driver: local
-  postgres_data:
   redis-volume-data:
   redisinsight-data:

@@ -1,5 +1,6 @@
 // Go Server URL
 const URL = "ws://localhost:3551/";
+const HTTP_URL = "http://localhost:3551/";
 
 // enum for communication types
 const CommunicationType = {
@@ -10,6 +11,7 @@ const CommunicationType = {
 
 let webSocket;
 let username;
+let currentCommunicationType;
 
 function handleCommunicationType(communicationType) {
     username = document.getElementById("name").value;
@@ -32,8 +34,7 @@ function handleCommunicationType(communicationType) {
     chat.classList.remove("hidden");
 
 
-    
-    
+    currentCommunicationType = communicationType;
     // grab persistent value
     if (communicationType === CommunicationType.NoPersistent){
         console.log(URL+communicationType);
@@ -71,14 +72,35 @@ function handleNoPersistent(webSocket) {
     }
 }
 
-function handleSendMessage() {
-    const textField = document.getElementById("message");
-    const payload = {
-        "Username": username,
-        "Message": textField.value,
-    };
-    textField.value = "";
-    webSocket.send(JSON.stringify(payload));
+
+async function handleSendMessage() {
+    if (currentCommunicationType === CommunicationType.NoPersistent){
+        const textField = document.getElementById("message");
+        const payload = {
+            "Username": username,
+            "Message": textField.value,
+        };
+        textField.value = "";
+        webSocket.send(JSON.stringify(payload));
+    } else if (currentCommunicationType === CommunicationType.PersistentFirst){
+        const textField = document.getElementById("message");
+        
+        // send POST Request
+        await fetch(HTTP_URL + currentCommunicationType +"-insert", {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "Username": username,
+                "Message": textField.value,
+            }),
+        }).then(()=>{
+            console.log(`Data has been added to the Database!`);
+        });
+    }
 }
 
 function addNewChatInGUI(name, avatarSrc, message) {

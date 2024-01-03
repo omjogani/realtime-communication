@@ -9,7 +9,8 @@ import (
 	"net/http"
 
 	"github.com/fatih/color"
-	models "github.com/omjogani/realtime-communication/models"
+	_ "github.com/lib/pq"
+	"github.com/omjogani/realtime-communication/models"
 	"golang.org/x/net/websocket"
 )
 
@@ -35,7 +36,7 @@ func (s *Server) broadCastRequest(payload []byte) {
 	}
 }
 
-func (s *Server) readLoop(ws *websocket.Conn, db *sql.DB) {
+func (s *Server) readLoop(ws *websocket.Conn) {
 	buffer := make([]byte, 1024)
 	for {
 		value, err := ws.Read(buffer)
@@ -57,13 +58,6 @@ func (s *Server) readLoop(ws *websocket.Conn, db *sql.DB) {
 		}
 		fmt.Print(data.Username, ": ")
 		fmt.Println(data.Message)
-		// Insert Data to PostgreSQL
-		if data.Message != "" {
-			_, err := db.Exec("INSERT INTO messages VALUES ($1, $2)", data.Username, data.Message)
-			if err != nil {
-				log.Fatalf("Error While Executing Query: %v", err)
-			}
-		}
 		s.broadCastRequest(message)
 	}
 }
@@ -71,17 +65,51 @@ func (s *Server) readLoop(ws *websocket.Conn, db *sql.DB) {
 func (s *Server) RequestHandler(ws *websocket.Conn) {
 	color.Blue("New Connection From Client: %v", ws.RemoteAddr())
 	s.conns[ws] = true
-	// Configuration to PostgreSQL
-
-	connStr := "postgresql://admin:admin@localhost:5432/MSGDB?sslmode=disable"
-
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	s.readLoop(ws, db)
+	s.readLoop(ws)
 }
 
 func (s *Server) InsertRequestHandler(w http.ResponseWriter, r *http.Request) {
+	var receivedData models.Message
+	err := json.NewDecoder(r.Body).Decode(&receivedData)
+	checkNilError(err, "Receiving Data")
 
+	// Configure PostgreSQL
+	connStr := "db://admin:postgres@localhost:5432/MSGDB?sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
+	checkNilError(err, "OpenDB")
+	// defer db.Close()
+
+	// Insert Data to PostgreSQL
+	if receivedData.Message != "" {
+		// _, err := db.Exec("INSERT INTO messages VALUES ($1, $2)", receivedData.Username, receivedData.Message)
+		// _, errQ := db.Exec(`BEGIN
+		// 					INSERT INTO Messages VALUES ('` + receivedData.Username + `','` + receivedData.Message + `');
+		// 					EXCEPTION WHEN undefined_table THEN
+		// 						CREATE TABLE Messages (
+		// 							username TEXT,
+		// 							message TEXT
+		// 						);
+		// 						INSERT INTO Messages VALUES ('` + receivedData.Username + `','` + receivedData.Message + `');
+		// 					END;`)
+		var listOfName []string
+		rows, errQ := db.Query("SELECT name FROM emp")
+		checkNilError(errQ, "DB Operation")
+		for rows.Next() {
+			var name string
+			er := rows.Scan(&name)
+			if er != nil {
+				fmt.Println("Error Here")
+				continue
+			}
+			listOfName = append(listOfName, name)
+		}
+		fmt.Println(listOfName)
+		fmt.Println(receivedData)
+	}
+}
+
+func checkNilError(err error, context ...string) {
+	if err != nil {
+		log.Fatal(context, err)
+	}
 }

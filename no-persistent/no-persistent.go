@@ -6,6 +6,7 @@ import (
 	"io"
 
 	"github.com/fatih/color"
+	"github.com/omjogani/realtime-communication/models"
 	"golang.org/x/net/websocket"
 )
 
@@ -31,11 +32,6 @@ func (s *Server) broadCastRequest(payload []byte) {
 	}
 }
 
-type Message struct {
-	Username string
-	Message  string
-}
-
 func (s *Server) readLoop(ws *websocket.Conn) {
 	buffer := make([]byte, 1024)
 	for {
@@ -50,7 +46,7 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 		}
 		message := buffer[:value]
 		messageStr := string(message)
-		var data Message
+		var data models.Message
 
 		err = json.Unmarshal([]byte(messageStr), &data)
 		if err != nil {

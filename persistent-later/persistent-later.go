@@ -7,7 +7,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/go-redis/redis"
-	models "github.com/omjogani/realtime-communication/models"
+	"github.com/omjogani/realtime-communication/models"
 	"golang.org/x/net/websocket"
 )
 

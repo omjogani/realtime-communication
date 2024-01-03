@@ -1,2 +1,5 @@
 # Removed Environment Variables
 .env
+
+# Removed Postgres Data
+data/
