@@ -74,36 +74,37 @@ func (s *Server) InsertRequestHandler(w http.ResponseWriter, r *http.Request) {
 	checkNilError(err, "Receiving Data")
 
 	// Configure PostgreSQL
-	connStr := "db://admin:postgres@localhost:5432/MSGDB?sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	const (
+		host     = "localhost"
+		port     = 5432
+		user     = "omjogani"
+		password = "OmJogani"
+		dbname   = "msgDB"
+	)
+
+	// connStr := "db://omjogani:OmJogani@localhost:5432/msgDB?sslmode=disable"
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlInfo)
 	checkNilError(err, "OpenDB")
 	// defer db.Close()
 
 	// Insert Data to PostgreSQL
 	if receivedData.Message != "" {
-		// _, err := db.Exec("INSERT INTO messages VALUES ($1, $2)", receivedData.Username, receivedData.Message)
-		// _, errQ := db.Exec(`BEGIN
-		// 					INSERT INTO Messages VALUES ('` + receivedData.Username + `','` + receivedData.Message + `');
-		// 					EXCEPTION WHEN undefined_table THEN
-		// 						CREATE TABLE Messages (
-		// 							username TEXT,
-		// 							message TEXT
-		// 						);
-		// 						INSERT INTO Messages VALUES ('` + receivedData.Username + `','` + receivedData.Message + `');
-		// 					END;`)
-		var listOfName []string
-		rows, errQ := db.Query("SELECT name FROM emp")
-		checkNilError(errQ, "DB Operation")
-		for rows.Next() {
-			var name string
-			er := rows.Scan(&name)
-			if er != nil {
-				fmt.Println("Error Here")
-				continue
-			}
-			listOfName = append(listOfName, name)
-		}
-		fmt.Println(listOfName)
+		_, errQ := db.Exec(`
+							DO $$
+							BEGIN
+								INSERT INTO Messages VALUES ('` + receivedData.Username + `', '` + receivedData.Message + `');
+							EXCEPTION WHEN undefined_table THEN
+								CREATE TABLE Messages (
+									username TEXT,
+									message TEXT
+								);
+								INSERT INTO Messages VALUES ('` + receivedData.Username + `', '` + receivedData.Message + `');
+							END $$;
+							`)
+		checkNilError(errQ, "Database Insert Operation")
 		fmt.Println(receivedData)
 	}
 }
