@@ -68,32 +68,35 @@ func (s *Server) RequestHandler(ws *websocket.Conn) {
 	s.readLoop(ws)
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Auth-Token, Origin, Authorization")
+}
+
 func (s *Server) InsertRequestHandler(w http.ResponseWriter, r *http.Request) {
-	var receivedData models.Message
-	err := json.NewDecoder(r.Body).Decode(&receivedData)
-	checkNilError(err, "Receiving Data")
+	enableCors(&w)
+	if r.Method == "POST" {
+		var receivedData models.Message
+		err := json.NewDecoder(r.Body).Decode(&receivedData)
+		checkNilError(err, "Receiving Data")
 
-	// Configure PostgreSQL
-	const (
-		host     = "localhost"
-		port     = 5432
-		user     = "omjogani"
-		password = "OmJogani"
-		dbname   = "msgDB"
-	)
+		// Configure PostgreSQL
+		const (
+			host     = "localhost"
+			port     = 5432
+			user     = "omjogani"
+			password = "OmJogani"
+			dbname   = "msgDB"
+		)
 
-	// connStr := "db://omjogani:OmJogani@localhost:5432/msgDB?sslmode=disable"
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
-	checkNilError(err, "OpenDB")
-	// defer db.Close()
+		pSQLInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+		db, err := sql.Open("postgres", pSQLInfo)
+		checkNilError(err, "OpenDB")
+		defer db.Close()
 
-	// Insert Data to PostgreSQL
-	if receivedData.Message != "" {
-		_, errQ := db.Exec(`
-							DO $$
+		// Insert Data to PostgreSQL
+		if receivedData.Message != "" {
+			_, errQ := db.Exec(`DO $$
 							BEGIN
 								INSERT INTO Messages VALUES ('` + receivedData.Username + `', '` + receivedData.Message + `');
 							EXCEPTION WHEN undefined_table THEN
@@ -104,8 +107,13 @@ func (s *Server) InsertRequestHandler(w http.ResponseWriter, r *http.Request) {
 								INSERT INTO Messages VALUES ('` + receivedData.Username + `', '` + receivedData.Message + `');
 							END $$;
 							`)
-		checkNilError(errQ, "Database Insert Operation")
-		fmt.Println(receivedData)
+			checkNilError(errQ, "Database Insert Operation")
+			fmt.Println(receivedData)
+			// broadcast message
+			payload, err := json.Marshal(receivedData)
+			checkNilError(err, "Marshaling Process")
+			s.broadCastRequest([]byte(payload))
+		}
 	}
 }
 
