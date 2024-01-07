@@ -41,13 +41,12 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const _socket = new WebSocket("ws://localhost:3551/no-persistent");
-    console.log(_socket);
-    _socket.onmessage = ((event:any) => onMessageReceive(event.data));
-    setSocket(_socket);
+    const _webSocket = new WebSocket("ws://localhost:3551/no-persistent");
+    console.log(_webSocket);
+    _webSocket.onmessage = (event: any) => onMessageReceive(event.data);
+    setSocket(_webSocket);
     return () => {
-      //   _socket.disconnect();
-    //   _socket.off("message", onMessageReceive);
+      _webSocket.close();
       setSocket(undefined);
     };
   }, []);
