@@ -8,12 +8,12 @@ import { useSocket } from "@/contexts/SocketProvider";
 
 interface ChatProps {
   communicationType: string;
+  username: string;
 }
 
-export function ChatDisplay({ communicationType }: ChatProps) {
+export function ChatDisplay({ communicationType, username }: ChatProps) {
   const { sendMessage, messages } = useSocket();
   const [message, setMessage] = useState("");
-  const [username, setUsername] = useState("Om");
 
   return (
     <div className="flex h-screen bg-slate-800 w-1/2 flex-col">
@@ -26,7 +26,7 @@ export function ChatDisplay({ communicationType }: ChatProps) {
       <Separator />
       {messages ? (
         <div className="flex flex-1 flex-col ">
-          {messages.map((e) => (
+          {messages.map((e) => (            
             <div key={e} className="flex items-start p-4 m-2 rounded-md bg-slate-600">
               <div className="flex items-start gap-4 text-sm">
                 <Avatar className="bg-slate-400">
@@ -48,7 +48,6 @@ export function ChatDisplay({ communicationType }: ChatProps) {
               </div>
             </div>
           ))}
-
           <Separator />
           <Separator className="mt-auto" />
           <div className="p-4">

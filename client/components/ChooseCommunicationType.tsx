@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-const ChooseCommunicationType = () => {
+const ChooseCommunicationType = ({username}: {username:string}) => {
   return (
     <div className="text-center pt-5">
       <DropdownMenu>
@@ -18,7 +18,7 @@ const ChooseCommunicationType = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuItem>
-            <Link href="/no-persistent">No Persistent (Zoom/GMeet Chat)</Link>
+            <Link href={`/no-persistent/${username}`}>No Persistent (Zoom/GMeet Chat)</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
           <Link href="/persistent-first">Persistent First (Slack)</Link>
