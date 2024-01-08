@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
-import { useSocket } from "@/contexts/SocketProvider";
+import { useSocket } from "@/contexts/WebSocketProvider";
 
 interface ChatProps {
   communicationType: string;
@@ -26,21 +26,21 @@ export function ChatDisplay({ communicationType, username }: ChatProps) {
       <Separator />
       {messages ? (
         <div className="flex flex-1 flex-col ">
-          {messages.map((e) => (            
-            <div key={e} className="flex items-start p-4 m-2 rounded-md bg-slate-600">
+          {messages.map((e, index) => (            
+            <div key={index} className="flex items-start p-4 m-2 rounded-md bg-slate-600">
               <div className="flex items-start gap-4 text-sm">
                 <Avatar className="bg-slate-400">
-                  <AvatarImage alt={username} />
+                  <AvatarImage alt={e[0]} />
                   <AvatarFallback>
-                    {username
+                    {e[0]
                       .split(" ")
                       .map((chunk) => chunk[0])
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                  <div className="font-semibold">{username}</div>
-                  <div className="line-clamp-1 text-xs">{e}</div>
+                  <div className="font-semibold">{e[0]}</div>
+                  <div className="line-clamp-1 text-xs">{e[1]}</div>
                   <div className="line-clamp-1 text-xs">
                     {new Date().toString()}
                   </div>
@@ -55,6 +55,7 @@ export function ChatDisplay({ communicationType, username }: ChatProps) {
               <div className="grid gap-4">
                 <Textarea
                   className="p-4"
+                  value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={`Type message here...`}
                 />
@@ -62,7 +63,8 @@ export function ChatDisplay({ communicationType, username }: ChatProps) {
                   <Button
                     onClick={(e) => {
                       e.preventDefault();
-                      sendMessage(message);
+                      setMessage("");
+                      sendMessage(username, message);
                     }}
                     size="sm"
                     className="ml-auto"

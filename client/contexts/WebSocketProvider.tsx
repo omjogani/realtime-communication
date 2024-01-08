@@ -7,8 +7,8 @@ interface SocketProviderProps {
 }
 
 interface ISocketContext {
-  sendMessage: (msg: string) => any;
-  messages: string[];
+  sendMessage: (username: string, msg: string) => any;
+  messages: [string, string][];
 }
 
 const SocketContext = React.createContext<ISocketContext | null>(null);
@@ -19,15 +19,15 @@ export const useSocket = () => {
   return state;
 };
 
-export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
+export const WebSocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<WebSocket>();
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<[string, string][]>([]);
 
   const sendMessage: ISocketContext["sendMessage"] = useCallback(
-    (msg) => {
+    (username, msg) => {
       console.log(`Message :${msg}`);
       if (socket) {
-        socket.send(JSON.stringify({ Username: "Om", Message: msg }));
+        socket.send(JSON.stringify({ Username: username, Message: msg }));
       }
     },
     [socket]
@@ -36,8 +36,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const onMessageReceive = useCallback((msg: string) => {
     console.log(`From Server MSG Rec ${msg}`);
 
-    const { Message } = JSON.parse(msg) as { Message: string };
-    setMessages((prev) => [...prev, Message]);
+    const { Username, Message } = JSON.parse(msg) as { Username: string, Message: string };
+    setMessages((prev) => [...prev, [Username, Message]]);
   }, []);
 
   useEffect(() => {

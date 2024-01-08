@@ -2,7 +2,7 @@
 
 import { ChatDisplay } from "@/components/Chat";
 import { usePathname } from 'next/navigation';
-import { SocketProvider } from "@/contexts/SocketProvider";
+import { WebSocketProvider } from "@/contexts/WebSocketProvider";
 
 const NoPersistent = () => {
   const path: string = usePathname();
@@ -10,9 +10,9 @@ const NoPersistent = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <SocketProvider>
+      <WebSocketProvider>
         <ChatDisplay communicationType="no-persistent" username={username.replace(/%20/g, " ") ?? "Guest"} />
-      </SocketProvider>
+      </WebSocketProvider>
     </div>
   );
 };
