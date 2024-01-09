@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,17 +15,24 @@ import (
 )
 
 func main() {
+
 	// Load PORT from Environment Variables
 	envError := godotenv.Load(".env")
 	if envError != nil {
 		fmt.Println("ERROR: ", envError)
 		log.Fatal("Could not load Environment Variables...")
 	}
-	PORT := os.Getenv("PORT_NO")
-	if PORT == "" {
-		PORT = "3550"
+	CMDPORT := flag.String("port", "", "Port Number to start Server")
+	flag.Parse()
+
+	if *CMDPORT == "" {
+		PORT := os.Getenv("PORT_NO")
+		if PORT == "" {
+			PORT = "3550"
+		}
+		PORT = "3551" // TODO: REMOVE THIS LINE
+		*CMDPORT = PORT
 	}
-	PORT = "3551"
 
 	noPersistentConnection := no_persistent.NewServer()
 	persistentFirstConnection := persistent_first.NewServer()
@@ -34,7 +42,7 @@ func main() {
 	http.HandleFunc("/persistent-first-insert", persistentFirstConnection.InsertRequestHandler)
 	// http.Handle("/persistent-later", websocket.Handler())
 
-	color.Green("Server is listening at: %v", PORT)
+	color.Green("Server is listening at: %v", *CMDPORT)
 	color.Blue("------------------------------")
-	http.ListenAndServe(fmt.Sprintf(":%v", PORT), nil)
+	http.ListenAndServe(fmt.Sprintf(":%v", *CMDPORT), nil)
 }
