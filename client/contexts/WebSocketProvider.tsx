@@ -3,6 +3,7 @@
 import React, { useCallback, useContext, useState, useEffect } from "react";
 
 interface SocketProviderProps {
+  communicationType: string;
   children?: React.ReactNode;
 }
 
@@ -19,7 +20,7 @@ export const useSocket = () => {
   return state;
 };
 
-export const WebSocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
+export const WebSocketProvider: React.FC<SocketProviderProps> = ({ communicationType, children }) => {
   const [socket, setSocket] = useState<WebSocket>();
   const [messages, setMessages] = useState<[string, string][]>([]);
 
@@ -41,7 +42,7 @@ export const WebSocketProvider: React.FC<SocketProviderProps> = ({ children }) =
   }, []);
 
   useEffect(() => {
-    const _webSocket = new WebSocket("ws://localhost:3551/no-persistent");
+    const _webSocket = new WebSocket(`ws://localhost:3551/${communicationType}`);
     console.log(_webSocket);
     _webSocket.onmessage = (event: any) => onMessageReceive(event.data);
     setSocket(_webSocket);

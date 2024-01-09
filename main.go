@@ -26,10 +26,12 @@ func main() {
 	}
 	PORT = "3551"
 
+	noPersistentConnection := no_persistent.NewServer()
+	persistentFirstConnection := persistent_first.NewServer()
 	// Redirection Paths
-	http.Handle("/no-persistent", websocket.Handler(no_persistent.NewServer().RequestHandler))
-	http.Handle("/persistent-first", websocket.Handler(persistent_first.NewServer().RequestHandler))
-	http.HandleFunc("/persistent-first-insert", persistent_first.NewServer().InsertRequestHandler)
+	http.Handle("/no-persistent", websocket.Handler(noPersistentConnection.RequestHandler))
+	http.Handle("/persistent-first", websocket.Handler(persistentFirstConnection.RequestHandler))
+	http.HandleFunc("/persistent-first-insert", persistentFirstConnection.InsertRequestHandler)
 	// http.Handle("/persistent-later", websocket.Handler())
 
 	color.Green("Server is listening at: %v", PORT)

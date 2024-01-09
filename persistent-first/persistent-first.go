@@ -63,7 +63,7 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 }
 
 func (s *Server) RequestHandler(ws *websocket.Conn) {
-	color.Blue("New Connection From Client: %v", ws.RemoteAddr())
+	color.Blue("New Persistent First Conn: %v", ws.RemoteAddr())
 	s.conns[ws] = true
 	s.readLoop(ws)
 }
@@ -108,7 +108,7 @@ func (s *Server) InsertRequestHandler(w http.ResponseWriter, r *http.Request) {
 							END $$;
 							`)
 			checkNilError(errQ, "Database Insert Operation")
-			fmt.Println(receivedData)
+			color.Green("Data Inserted")
 			// broadcast message
 			payload, err := json.Marshal(receivedData)
 			checkNilError(err, "Marshaling Process")

@@ -10,7 +10,7 @@ const NoPersistent = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <WebSocketProvider>
+      <WebSocketProvider communicationType="no-persistent">
         <ChatDisplay communicationType="no-persistent" username={username.replace(/%20/g, " ") ?? "Guest"} />
       </WebSocketProvider>
     </div>

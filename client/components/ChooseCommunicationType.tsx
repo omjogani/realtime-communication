@@ -21,10 +21,10 @@ const ChooseCommunicationType = ({username}: {username:string}) => {
             <Link href={`/no-persistent/${username}`}>No Persistent (Zoom/GMeet Chat)</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-          <Link href="/persistent-first">Persistent First (Slack)</Link>
+          <Link href={`/persistent-first/${username}`}>Persistent First (Slack)</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-          <Link href="/persistent-later">Persistent Later (WhatsApp)</Link>
+          <Link href={`/persistent-later/${username}`}>Persistent Later (WhatsApp)</Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
